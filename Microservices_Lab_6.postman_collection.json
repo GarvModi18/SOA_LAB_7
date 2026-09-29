@@ -1,0 +1,467 @@
+{
+	"info": {
+		"_postman_id": "f8a92b31-8930-4e1a-8c82-9cb4d59f71b9",
+		"name": "Microservices – Lab 6",
+		"description": "Postman Collection for Web Services & SOA Lab 6: Docker & Microservices Architecture (User Service, Product Service, Order Service).",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1. User Service (:3001)",
+			"item": [
+				{
+					"name": "Health Check - User Service",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3001/health",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3001",
+							"path": ["health"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create User (POST /users)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.data && jsonData.data.id) {",
+									"    pm.environment.set(\"userId\", jsonData.data.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Garv Modi\",\n  \"email\": \"garv.modi@university.edu\",\n  \"role\": \"student\",\n  \"department\": \"Computer Science & Engineering\",\n  \"phone\": \"+91-9876543210\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3001/users",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3001",
+							"path": ["users"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Users (GET /users)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3001/users",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3001",
+							"path": ["users"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User By ID (GET /users/:id)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3001/users/{{userId}}",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3001",
+							"path": ["users", "{{userId}}"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update User (PUT /users/:id)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"phone\": \"+91-9988776655\",\n  \"department\": \"Artificial Intelligence & Data Science\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3001/users/{{userId}}",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3001",
+							"path": ["users", "{{userId}}"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User (DELETE /users/:id)",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3001/users/{{userId}}",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3001",
+							"path": ["users", "{{userId}}"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "2. Product Service (:3002)",
+			"item": [
+				{
+					"name": "Health Check - Product Service",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3002/health",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3002",
+							"path": ["health"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Product (POST /products)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.data && jsonData.data.id) {",
+									"    pm.environment.set(\"productId\", jsonData.data.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Microservices Architecture Handbook\",\n  \"category\": \"Books\",\n  \"price\": 450,\n  \"stock\": 25,\n  \"description\": \"Comprehensive guide on cloud native microservices & Docker orchestration.\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3002/products",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3002",
+							"path": ["products"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Products (GET /products)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3002/products",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3002",
+							"path": ["products"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Product By ID (GET /products/:id)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3002/products/{{productId}}",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3002",
+							"path": ["products", "{{productId}}"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Product (PUT /products/:id)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"price\": 499,\n  \"stock\": 50\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3002/products/{{productId}}",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3002",
+							"path": ["products", "{{productId}}"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Product (DELETE /products/:id)",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3002/products/{{productId}}",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3002",
+							"path": ["products", "{{productId}}"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "3. Order Service (:3003) & Inter-Service",
+			"item": [
+				{
+					"name": "Health Check - Order Service",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3003/health",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3003",
+							"path": ["health"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Order (Success - Inter-Service Validation)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.data && jsonData.data.id) {",
+									"    pm.environment.set(\"orderId\", jsonData.data.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"userId\": \"{{userId}}\",\n  \"productId\": \"{{productId}}\",\n  \"quantity\": 2,\n  \"shippingAddress\": \"Department of CSE - Lab 6, Room 302\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3003/orders",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3003",
+							"path": ["orders"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Orders (GET /orders)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3003/orders",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3003",
+							"path": ["orders"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Order By ID (GET /orders/:id)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3003/orders/{{orderId}}",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3003",
+							"path": ["orders", "{{orderId}}"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Order Status (PUT /orders/:id/status)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"status\": \"completed\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3003/orders/{{orderId}}/status",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3003",
+							"path": ["orders", "{{orderId}}", "status"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "4. Failure Handling & Resilience",
+			"item": [
+				{
+					"name": "Order Creation with Invalid User ID (Expect 404)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"userId\": \"65f000000000000000000000\",\n  \"productId\": \"{{productId}}\",\n  \"quantity\": 1\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3003/orders",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3003",
+							"path": ["orders"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Order Creation with Invalid Product ID (Expect 404)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"userId\": \"{{userId}}\",\n  \"productId\": \"65f000000000000000000000\",\n  \"quantity\": 1\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3003/orders",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3003",
+							"path": ["orders"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Order Creation when Dependency Down (Expect 503)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"userId\": \"{{userId}}\",\n  \"productId\": \"{{productId}}\",\n  \"quantity\": 1\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3003/orders",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3003",
+							"path": ["orders"]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "userId",
+			"value": "65f000000000000000000001"
+		},
+		{
+			"key": "productId",
+			"value": "65f000000000000000000002"
+		},
+		{
+			"key": "orderId",
+			"value": "65f000000000000000000003"
+		}
+	]
+}

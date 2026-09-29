@@ -1,0 +1,131 @@
+# ==============================================================================
+# Docker Compose Configuration for Lab 7: API Gateway, Service Discovery & Microservices
+# Gateway (:3000) -> User (:3001), Product (:3002), Order (:3003) & MongoDB
+# ==============================================================================
+
+services:
+  # ----------------------------------------------------------------------------
+  # API Gateway (Single Entry Point for Clients / Reverse Proxy)
+  # ----------------------------------------------------------------------------
+  api-gateway:
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile
+    image: api-gateway:v1
+    container_name: api-gateway
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - GATEWAY_PORT=3000
+      - USER_SERVICE_URL=http://user-service:3001
+      - PRODUCT_SERVICE_URL=http://product-service:3002
+      - ORDER_SERVICE_URL=http://order-service:3003
+      - USER_SERVICE_TIMEOUT_MS=5000
+      - PRODUCT_SERVICE_TIMEOUT_MS=5000
+      - ORDER_SERVICE_TIMEOUT_MS=5000
+    depends_on:
+      - user-service
+      - product-service
+      - order-service
+    networks:
+      - campus-network
+    restart: unless-stopped
+
+  # ----------------------------------------------------------------------------
+  # User Microservice (Internal Docker Network Only)
+  # ----------------------------------------------------------------------------
+  user-service:
+    build:
+      context: ./user-service
+      dockerfile: Dockerfile
+    image: user-service:v1
+    container_name: user-service
+    expose:
+      - "3001"
+    environment:
+      - USER_SERVICE_PORT=3001
+      - PORT=3001
+      - MONGO_URI=mongodb://mongodb:27017/campusconnect_users
+    depends_on:
+      - mongodb
+    networks:
+      - campus-network
+    restart: unless-stopped
+
+  # ----------------------------------------------------------------------------
+  # Product Microservice (Internal Docker Network Only)
+  # ----------------------------------------------------------------------------
+  product-service:
+    build:
+      context: ./product-service
+      dockerfile: Dockerfile
+    image: product-service:v1
+    container_name: product-service
+    expose:
+      - "3002"
+    environment:
+      - PRODUCT_SERVICE_PORT=3002
+      - PORT=3002
+      - MONGO_URI=mongodb://mongodb:27017/campusconnect_products
+    depends_on:
+      - mongodb
+    networks:
+      - campus-network
+    restart: unless-stopped
+
+  # ----------------------------------------------------------------------------
+  # Order Microservice (Internal Docker Network Only)
+  # ----------------------------------------------------------------------------
+  order-service:
+    build:
+      context: ./order-service
+      dockerfile: Dockerfile
+    image: order-service:v1
+    container_name: order-service
+    expose:
+      - "3003"
+    environment:
+      - ORDER_SERVICE_PORT=3003
+      - PORT=3003
+      - MONGO_URI=mongodb://mongodb:27017/campusconnect_orders
+      - USER_SERVICE_URL=http://user-service:3001
+      - PRODUCT_SERVICE_URL=http://product-service:3002
+      - SERVICE_TIMEOUT_MS=4000
+    depends_on:
+      - mongodb
+      - user-service
+      - product-service
+    networks:
+      - campus-network
+    restart: unless-stopped
+
+  # ----------------------------------------------------------------------------
+  # MongoDB Database Engine (Internal Data Storage)
+  # ----------------------------------------------------------------------------
+  mongodb:
+    image: mongo:latest
+    container_name: campus-mongodb
+    expose:
+      - "27017"
+    volumes:
+      - campus-mongo-data:/data/db
+    networks:
+      - campus-network
+    restart: unless-stopped
+
+# ------------------------------------------------------------------------------
+# Shared Docker Network for Container-to-Container Communication
+# ------------------------------------------------------------------------------
+networks:
+  campus-network:
+    name: campus-network
+    driver: bridge
+
+# ------------------------------------------------------------------------------
+# Persistent Volume for Database Storage
+# ------------------------------------------------------------------------------
+volumes:
+  campus-mongo-data:
+    name: campus-mongo-data
+    driver: local
