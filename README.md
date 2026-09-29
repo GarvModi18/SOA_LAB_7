@@ -133,15 +133,15 @@ const serviceRegistry = {
 
 You can deploy the containerized microservices stack to any modern cloud container provider:
 
-#### Option 1: Render / Railway (Recommended for Free Tier / Student Accounts)
-1. **Database:** Create a free MongoDB Atlas cluster and obtain the connection string `mongodb+srv://<username>:<password>@cluster0.mongodb.net/`.
-2. **Repository:** Push this repository to GitHub.
-3. **Services Creation:**
-   - Deploy `user-service` as a Web Service (Docker). Set `PORT=3001` and `MONGO_URI=<Atlas_User_URI>`.
-   - Deploy `product-service` as a Web Service (Docker). Set `PORT=3002` and `MONGO_URI=<Atlas_Product_URI>`.
-   - Deploy `order-service` as a Web Service (Docker). Set `PORT=3003`, `USER_SERVICE_URL=<user-service-url>`, `PRODUCT_SERVICE_URL=<product-service-url>`, and `MONGO_URI=<Atlas_Order_URI>`.
-   - Deploy `api-gateway` as a Web Service (Docker). Set `USER_SERVICE_URL=<user-service-url>`, `PRODUCT_SERVICE_URL=<product-service-url>`, and `ORDER_SERVICE_URL=<order-service-url>`.
-4. **Public Gateway:** The `api-gateway` provides the single public URL (e.g., `https://campusconnect-gateway.onrender.com`).
+#### Option 1: Render Blueprints (1-Click Deployment via `render.yaml`)
+1. **Database:** Ensure your MongoDB Atlas cluster has network access set to `0.0.0.0/0` (Allow from Anywhere).
+2. **Push Code:** Push this repository containing `render.yaml` to GitHub.
+3. **Deploy with Blueprint:**
+   - In [Render Dashboard](https://dashboard.render.com/), click **New +** $\rightarrow$ **Blueprint**.
+   - Connect your GitHub repository. Render will parse `render.yaml` and auto-configure all 4 services.
+   - Enter your MongoDB Atlas URIs when prompted for `MONGO_URI`.
+   - Click **Apply** — Render automatically spins up `campus-api-gateway`, `campus-user-service`, `campus-product-service`, and `campus-order-service` with internal networking pre-wired!
+4. **Public Gateway:** Access the public URL generated for `campus-api-gateway` (e.g. `https://campus-api-gateway.onrender.com`).
 
 #### Option 2: Single VM / App Service (AWS EC2 / GCP Compute / Azure VM)
 1. Install Docker & Docker Compose on the VM.

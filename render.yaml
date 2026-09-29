@@ -1,0 +1,92 @@
+# ==============================================================================
+# Render Blueprint (Infrastructure-as-Code) for Lab 7
+# Deploys API Gateway & All 3 Microservices in 1 Click
+# ==============================================================================
+
+services:
+  # ----------------------------------------------------------------------------
+  # 1. API Gateway (Public Web Service — The Single Entry Point)
+  # ----------------------------------------------------------------------------
+  - type: web
+    name: campus-api-gateway
+    env: docker
+    dockerContext: ./api-gateway
+    dockerfilePath: ./api-gateway/Dockerfile
+    plan: free
+    region: oregon
+    envVars:
+      - key: PORT
+        value: 3000
+      - key: USER_SERVICE_URL
+        fromService:
+          type: web
+          name: campus-user-service
+          property: host
+      - key: PRODUCT_SERVICE_URL
+        fromService:
+          type: web
+          name: campus-product-service
+          property: host
+      - key: ORDER_SERVICE_URL
+        fromService:
+          type: web
+          name: campus-order-service
+          property: host
+
+  # ----------------------------------------------------------------------------
+  # 2. User Microservice
+  # ----------------------------------------------------------------------------
+  - type: web
+    name: campus-user-service
+    env: docker
+    dockerContext: ./user-service
+    dockerfilePath: ./user-service/Dockerfile
+    plan: free
+    region: oregon
+    envVars:
+      - key: PORT
+        value: 3001
+      - key: MONGO_URI
+        sync: false
+
+  # ----------------------------------------------------------------------------
+  # 3. Product Microservice
+  # ----------------------------------------------------------------------------
+  - type: web
+    name: campus-product-service
+    env: docker
+    dockerContext: ./product-service
+    dockerfilePath: ./product-service/Dockerfile
+    plan: free
+    region: oregon
+    envVars:
+      - key: PORT
+        value: 3002
+      - key: MONGO_URI
+        sync: false
+
+  # ----------------------------------------------------------------------------
+  # 4. Order Microservice
+  # ----------------------------------------------------------------------------
+  - type: web
+    name: campus-order-service
+    env: docker
+    dockerContext: ./order-service
+    dockerfilePath: ./order-service/Dockerfile
+    plan: free
+    region: oregon
+    envVars:
+      - key: PORT
+        value: 3003
+      - key: USER_SERVICE_URL
+        fromService:
+          type: web
+          name: campus-user-service
+          property: host
+      - key: PRODUCT_SERVICE_URL
+        fromService:
+          type: web
+          name: campus-product-service
+          property: host
+      - key: MONGO_URI
+        sync: false
